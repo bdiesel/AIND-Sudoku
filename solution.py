@@ -1,6 +1,4 @@
 assignments = []
-digits = '123456789'
-rows = 'ABCDEFGHI'
 
 
 def assign_value(values, box, value):
@@ -32,14 +30,24 @@ def cross(A, B):
     "Cross product of elements in A and elements in B."
     return [a+b for a in A for b in B]
 
-
+digits = '123456789'
+rows = 'ABCDEFGHI'
 cols = digits
+
 boxes = cross(rows, cols)
 
 row_units = [cross(r, cols) for r in rows]
 column_units = [cross(rows, c) for c in cols]
-square_units = [cross(rs, cs) for rs in ('ABC', 'DEF', 'GHI') for cs in ('123', '456', '789')]
-unitlist = row_units + column_units + square_units
+square_units = [cross(rs, cs) for rs in (
+    'ABC', 'DEF', 'GHI') for cs in ('123', '456', '789')]
+
+diagonal_units = [[rows[i] + cols[i] for i in range(len(rows))],
+                  [rows[i] + cols[len(cols)-1-i]
+                   for i in range(len(rows))
+                   ]
+                  ]
+
+unitlist = row_units + column_units + square_units + diagonal_units
 units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
 peers = dict((s, set(sum(units[s], []))-set([s])) for s in boxes)
 
@@ -113,7 +121,7 @@ def only_choice(values):
 
 def reduce_puzzle(values):
     """
-    Iterate eliminate() and only_choice(). If at some point, there is a box 
+    Iterate eliminate() and only_choice(). If at some point, there is a box
     with no available values, return False.
     If the sudoku is solved, return the sudoku.
     If after an iteration of both functions, the sudoku remains the same,
@@ -121,13 +129,15 @@ def reduce_puzzle(values):
     Input: A sudoku in dictionary form.
     Output: The resulting sudoku in dictionary form.
     """
-    solved_values = [box for box in values.keys() if len(values[box]) == 1]
+    # solved_values = [box for box in values.keys() if len(values[box]) == 1]
     stalled = False
     while not stalled:
-        solved_values_before = len([box for box in values.keys() if len(values[box]) == 1])
+        solved_values_before = len(
+            [box for box in values.keys() if len(values[box]) == 1])
         values = eliminate(values)
         values = only_choice(values)
-        solved_values_after = len([box for box in values.keys() if len(values[box]) == 1])
+        solved_values_after = len(
+            [box for box in values.keys() if len(values[box]) == 1])
         stalled = solved_values_before == solved_values_after
         if len([box for box in values.keys() if len(values[box]) == 0]):
             return False
@@ -158,12 +168,15 @@ def solve(grid):
 
 
 if __name__ == '__main__':
-    diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
+    diag_sudoku_grid = """2.............62....1....7.
+                          ..6..8...3...9...7...6..4..
+                          .4....8....52.............3"""
     # display(solve(grid_values(diag_sudoku_grid)))
     display(solve(diag_sudoku_grid))
-    
+
     try:
         from visualize import visualize_assignments
         visualize_assignments(assignments)
     except:
-        print('We could not visualize your board due to a pygame issue. Not a problem! It is not a requirement.')
+        print("""We could not visualize your board due to a pygame issue. 
+                 Not a problem! It is not a requirement.""")
