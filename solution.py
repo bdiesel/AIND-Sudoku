@@ -15,15 +15,43 @@ def assign_value(values, box, value):
 def naked_twins(values):
     """Eliminate values using the naked twins strategy.
 
-    Args:
+      Args:
         values(dict): a dictionary of the form {'box_name': '123456789', ...}
 
     Returns:
-        the values dictionary with the naked twins eliminated from peers.
+         the values dictionary with the naked twins eliminated from peers.
     """
 
-    # Find all instances of naked twins
-    # Eliminate the naked twins as possibilities for their peers
+    for unit in unitlist:
+        # Find an instance of naked twins
+        unit_twins = find_unit_twins(unit, values)
+        if(unit_twins):
+            # Eliminate the naked twins as possibilities for their peers
+            single_twins = eliminate_twins(unit, unit_twins)
+    return values
+
+
+def find_unit_twins(unit, values):
+    unit_twins = {}  # holder for unit values
+    for box in unit:
+        if len(values[box]) == 2:  # the box has two possible values
+            unit_twins[box] = values[box]  # asign the values to a key in the unit twin.
+            if len(unit_twins) == 2:  # the unit list has two possible key value pairs
+                valsar = []
+                keysar = []
+                for key, val in unit_twins.items():
+                    valsar.append(val)
+                    keysar.append(key)
+                if(valsar[0] == valsar[1]):
+                    return {val: [keysar[0], keysar[1]]}
+                else:
+                    return None
+    return None
+
+
+def eliminate_twins(unit, unit_twins):
+    print("Unit: ", unit,  "Unit Twins: ", unit_twins)
+    pass
 
 
 def cross(A, B):
@@ -136,6 +164,7 @@ def reduce_puzzle(values):
             [box for box in values.keys() if len(values[box]) == 1])
         values = eliminate(values)
         values = only_choice(values)
+        values = naked_twins(values)
         solved_values_after = len(
             [box for box in values.keys() if len(values[box]) == 1])
         stalled = solved_values_before == solved_values_after
