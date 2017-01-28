@@ -44,13 +44,9 @@ def find_unit_twins(unit, values):
         if len(values[box]) == 2:  # the box has two possible values
             unit_twins[box] = values[box]  # asign the values to a key in the unit twin.
             if len(unit_twins) == 2:  # the unit list has two possible key value pairs
-                valsar = []
-                keysar = []
-                for key, val in unit_twins.items():
-                    valsar.append(val)
-                    keysar.append(key)
+                valsar = tuple(unit_twins.values())
                 if(valsar[0] == valsar[1]):
-                    return keysar[0], keysar[1]
+                    return tuple(unit_twins.keys())
                 else:
                     return None
     return None

@@ -2,12 +2,16 @@
 ## Introductory Project: Diagonal Sudoku Solver
 
 # Question 1 (Naked Twins)
-Q: How do we use constraint propagation to solve the naked twins problem?  
-A: *Student should provide answer here*
+Q: How do we use constraint propagation to solve the naked twins problem?
+
+A: We look for two squares in the same unit that both have the same two possible values. Using the {'A1': '18', 'A8':'18'} as an example twin pair we can conclude that 1 and 8 must be in A1 and A8. Although this does not tell us which value belongs in which square, it does impose a constraint which allows 1 and 8 to be eliminated from every other square in the unit vector thus reducing the search space.
 
 # Question 2 (Diagonal Sudoku)
-Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A: *Student should provide answer here*
+Q: How do we use constraint propagation to solve the diagonal sudoku problem?
+
+A: Constraint propagation in diagonal sudoku problem applies the same constraint propagation techniques as regular sudoku problem along a new unit vector. In the diagonal problem the sames rules of elimination, only_choice, assign, and later naked_twins are applied iteratively so that a value appears only once along the new unit vector.
+
+
 
 ### Install
 
