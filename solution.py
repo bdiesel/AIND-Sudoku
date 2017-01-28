@@ -3,8 +3,8 @@ assignments = []
 
 def assign_value(values, box, value):
     """
-    Please use this function to update your values dictionary!
-    Assigns a value to a given box. If it updates the board record it.
+        Please use this function to update your values dictionary!
+        Assigns a value to a given box. If it updates the board record it.
     """
     values[box] = value
     if len(value) == 1:
@@ -18,20 +18,29 @@ def naked_twins(values):
       Args:
         values(dict): a dictionary of the form {'box_name': '123456789', ...}
 
-    Returns:
+      Returns:
          the values dictionary with the naked twins eliminated from peers.
     """
-
     for unit in unitlist:
         # Find an instance of naked twins
         unit_twins = find_unit_twins(unit, values)
         if(unit_twins):
             # Eliminate the naked twins as possibilities for their peers
-            single_twins = eliminate_twins(unit, unit_twins)
+            print(unit_twins)
+            eliminate_twins(unit, unit_twins, values)
     return values
 
 
 def find_unit_twins(unit, values):
+    """Eliminate values using the naked twins strategy.
+
+      Args:
+        unit(array): an array of an axis of elments['A9', 'B8', ... 'I1']
+        values(dict): a dictionary of the form {'box_name': '123456789', ...}
+
+      Returns:
+         unit_twins(tuple) of matching values ('H4', 'H6')
+    """
     unit_twins = {}  # holder for unit values
     for box in unit:
         if len(values[box]) == 2:  # the box has two possible values
@@ -43,15 +52,22 @@ def find_unit_twins(unit, values):
                     valsar.append(val)
                     keysar.append(key)
                 if(valsar[0] == valsar[1]):
-                    return {val: [keysar[0], keysar[1]]}
+                    return keysar[0], keysar[1]
                 else:
                     return None
     return None
 
 
-def eliminate_twins(unit, unit_twins):
-    print("Unit: ", unit,  "Unit Twins: ", unit_twins)
-    pass
+def eliminate_twins(unit, unit_twins, values):
+    """
+      We can therefore eliminate 2 and 6 from every other square in the A row unit.
+      We could code that strategy in a few lines by adding an elif len(values[s]) == 2 test to eliminate.
+    """
+    box, twin_box = unit_twins[0], unit_twins[1]
+    for target_box in set(peers[box]).intersection(peers[twin_box]):
+        for digit in values[box]:
+            # Remove the twin values
+            assign_value(values, target_box, values[target_box].replace(digit, ''))
 
 
 def cross(A, B):
