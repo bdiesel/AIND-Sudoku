@@ -1,10 +1,9 @@
 assignments = []
 
-
 def assign_value(values, box, value):
     """
-        Please use this function to update your values dictionary!
-        Assigns a value to a given box. If it updates the board record it.
+    Please use this function to update your values dictionary!
+    Assigns a value to a given box. If it updates the board record it.
     """
     values[box] = value
     if len(value) == 1:
@@ -26,7 +25,6 @@ def naked_twins(values):
         unit_twins = find_unit_twins(unit, values)
         if(unit_twins):
             # Eliminate the naked twins as possibilities for their peers
-            print(unit_twins)
             eliminate_twins(unit, unit_twins, values)
     return values
 
@@ -119,8 +117,8 @@ def grid_values(grid):
 def display(values):
     """
     Display the values as a 2-D grid.
-    Input: The sudoku in dictionary form
-    Output: None
+    Args:
+        values(dict): The sudoku in dictionary form
     """
     width = 1+max(len(values[s]) for s in boxes)
     line = '+'.join(['-'*(width*3)]*3)
@@ -222,6 +220,8 @@ if __name__ == '__main__':
     try:
         from visualize import visualize_assignments
         visualize_assignments(assignments)
+
+    except SystemExit:
+        pass
     except:
-        print("""We could not visualize your board due to a pygame issue. 
-                 Not a problem! It is not a requirement.""")
+        print('We could not visualize your board due to a pygame issue. Not a problem! It is not a requirement.')
